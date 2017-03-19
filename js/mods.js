@@ -1,6 +1,6 @@
 var ViewModel = function() {
 
-    this.currentDoggo = ko.observable( new Doggo() );
+    //this.currentArena = ko.observable( new Arena() );
 
     this.incrementCounter = function () {
         this.clickCount(this.clickCount() + 1);
@@ -10,12 +10,14 @@ var ViewModel = function() {
 
 ko.applyBindings(new ViewModel())
 
-
-function Doggo() {
+function Arena(data) {
     this.clickCount = ko.observable(0);
-    this.name = ko.observable('tabby');
-    this.imgSrc = ko.observable('img/BREAKtabby.jpg');
-    this.imgSauce = ko.observable('https://i.ytimg.com/vi/b9q6X0RARtk/maxresdefault.jpg');
+    this.id = ko.observable(data.id);
+    this.position = ko.observable(data.position);
+    this.text = ko.observable(data.name);
+
+    wu_call = 'http://api.wunderground.com/api/'+config.wu_key+'/hourly/q/37.776289,-122.395234.json'
+    console.log(wu_call)
 
     this.level = ko.computed(function() {
         if (this.clickCount() == 0) {
