@@ -1,0 +1,24 @@
+<head>
+    <meta charset="utf-8">
+    <title>frisbeeTndr</title>
+</head>
+<link rel="stylesheet" href='css/main.css'>
+<link rel="stylesheet" href="bower_components/select2/dist/css/select2.min.css">
+<body>
+<div>
+  <select id="park-name-text"></select>
+  <input id="park-name-sub" type="button" value="<- goto ">
+  <input id="park-name-sub" type="button" value="reset" onclick="window.location.reload()">
+</div>
+<div id="map">
+
+</div>
+<script src= "js/mappo.js">
+</script>
+<script async defer src= "https://maps.googleapis.com/maps/api/js?key=AIzaSyAgzELOPXkam7vjIB3y-uLLld5DDjoF55c&callback=initMap">
+</script>
+<script src='bower_components/knockout/dist/knockout.js'></script>
+<script src='bower_components/select2/vendor/jquery-2.1.0.js'></script>
+<script src='bower_components/select2/dist/js/select2.full.js'></script>
+
+</body>
