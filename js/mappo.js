@@ -1,32 +1,23 @@
-var map;
-var places = [
-    {id:1, position:{lat: 39.6984, lng: -104.9652}, text:'Wash Park'},
-    {id:2, position:{lat: 39.6757, lng: -104.9530}, text:'O Park'},
-    {id:3, position:{lat: 39.7459, lng: -104.9476}, text:'City Park'},
-    {id:4, position:{lat: 39.7335, lng: -104.9652}, text:'Cheeseman Park'},
-    {id:5, position:{lat: 39.7364, lng: -105.0317}, text:'Paco Sanchez Park'},
-    {id:6, position:{lat: 39.7014, lng: -105.0937}, text:'Belmar Park'}
-]
-
 function initMap(filter = null) {
+    var places = init_parks
     //empty the data selectable
     console.log('its the map man')
-    console.log(filter)
+    console.log(places)
     var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 5,
-    center: {lat: 40.7413, lng: -74.998}
+        zoom: 5,
+        center: {lat: 40.7413, lng: -74.998}
     });
     var largeInfoWindow = new google.maps.InfoWindow();
     var bounds = new google.maps.LatLngBounds();
     //add selectable data
     if (!$('#park-name-text').select2().val()) {
         console.log('not line 23')
-        $('#park-name-text').select2({data: places});
+        $('#park-name-text').select2({data: init_parks});
     }
     var markers = []
 
     for (i = 0; i < places.length; i++) {
-        if (filter==null || places[i].id == filter) {
+        if (filter==null || places[i].id() == filter) {
             //console.log(places[i].text)
             //console.log('is ok')
             var mark = new google.maps.Marker({
@@ -38,13 +29,17 @@ function initMap(filter = null) {
             markers.push(mark);
             bounds.extend(mark.position);
             mark.addListener('click', function() {
-                populateInfo(this, largeInfoWindow)
+                populateInfo(this, largeInfoWindow);
             });
         }}
     map.fitBounds(bounds);
 
     function populateInfo(marker, infowindow){
         if(infowindow.marker != marker) {
+            console.log('marker id')
+            console.log(document.getElementById(marker.title))
+            var clickedParkTitle = document.getElementById(marker.title)
+            clickedParkTitle.classList.toggle('park-info-open');
             infowindow.marker = marker;
             infowindow.marker.setAnimation(google.maps.Animation.BOUNCE);
             infowindow.setContent('<div>' + marker.title + '</div>');
@@ -52,7 +47,8 @@ function initMap(filter = null) {
             infowindow.addListener('closeclick', function() {
                 infowindow.marker.setAnimation(null);
                 console.log('shush');
-                //infowindow.marker = null;
+                var clickedParkTitle = document.getElementById(infowindow.marker.title)
+                clickedParkTitle.classList.remove('park-info-open');
             }, function(){
                     infowindow.marker = null
                 }

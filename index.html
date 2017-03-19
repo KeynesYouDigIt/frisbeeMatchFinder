@@ -5,25 +5,43 @@
 <link rel="stylesheet" href='css/main.css'>
 <link rel="stylesheet" href="bower_components/select2/dist/css/select2.min.css">
 <body>
+
+<div data-bind="foreach: parks">
+    <section data-bind="attr: {id: name}">
+        <p data-bind="text: name"></p>
+        <p>
+            <span data-bind="text: temp"></span> &deg; F
+        </p>
+        <p>
+            <img data-bind="attr:{src: conditionIco}"></span>
+        </p>
+        <p>
+            wind speed of - <span data-bind="text: wind"></span> MPH
+        </p>
+    </section>
+</div>
+
 <div>
   <select id="park-name-text"></select>
   <input id="park-name-sub" type="button" value="<- goto ">
   <input id="park-name-sub" type="button" value="reset" onclick="window.location.reload()">
 </div>
+
 <div id="map">
 
 </div>
 <script src="js/dem.js"></script>
 
-<script async defer src= "https://maps.googleapis.com/maps/api/js?key=AIzaSyAgzELOPXkam7vjIB3y-uLLld5DDjoF55c&callback=initMap">
-</script>
-<script src= "js/mappo.js"></script>
-
+<script src='bower_components/select2/vendor/jquery-2.1.0.js'></script>
 
 <script src='bower_components/knockout/dist/knockout.js'></script>
 <script src= "js/mods.js"></script>
+<!-- &callback=initMap -->
+<script async defer src= "https://maps.googleapis.com/maps/api/js?key=AIzaSyAgzELOPXkam7vjIB3y-uLLld5DDjoF55c">
+</script>
+<script src= "js/mappo.js"></script>
+<script src="js/finish.js"></script>
 
-<script src='bower_components/select2/vendor/jquery-2.1.0.js'></script>
 <script src='bower_components/select2/dist/js/select2.full.js'></script>
 
 </body>
