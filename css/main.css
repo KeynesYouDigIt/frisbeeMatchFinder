@@ -5,7 +5,7 @@
 	font-family: 'Muli', sans-serif;
     <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
     */
-	font-size: 22px;
+	font-size: 19px;
 	color: black;
     /*grid border for dev*/
 	/*border:2px dotted red;*/
@@ -19,6 +19,7 @@ body {
     padding: 0;
 }
 #map {
+    padding: 5px;
     height: 95%;
     length: 80%;
 }
@@ -28,10 +29,10 @@ body {
 }
 
 .park-info-open {
-    transform: translate(20px,20px);
+    transform: translate(6px,0px);
     text-align: left;
-    height: 190px;
-    width: 450px;
+    height: 250px;
+    width: 350px;
     padding: 5px;
     position: relative;
     margin: 5px;
