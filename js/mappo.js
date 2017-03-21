@@ -41,7 +41,7 @@ function initMap(filter = null) {
     var markers = []
 
     for (i = 0; i < places.length; i++) {
-        if (filter==null || places[i].id() == filter) {
+        if (filter==null || places[i].id == filter) {
             // First check if there is a filter, if there isnt
             // make sure everything is displayed.
             // If there is, check the filter for which Park the
@@ -93,6 +93,7 @@ function initMap(filter = null) {
 
     //the eblow gets a submitted filter and sets up the map accordingly.
     document.getElementById('park-name-sub').addEventListener('click', function() {
-        initMap(filter=document.getElementById('park-name-text').value);
+        initMap(
+            filter=document.getElementById('park-name-text').value);
     });
 };
