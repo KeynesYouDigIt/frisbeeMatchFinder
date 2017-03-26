@@ -95,11 +95,13 @@ var ViewModel = function() {
     // needed observables.
     this.parks = ko.observableArray([]);
 
-    self.selectedPark = ko.observable(false);
+    self.selectedPark = ko.observable();
+    self.selectedParkOpen = ko.observable(false);
 
     self.filterParks = function() {
                                 var selectedId = this.selectedPark().id();
-                                var parks = this.parks()
+                                var parks = this.parks();
+                                self.selectedParkOpen(true);
                                 for (i=0; i < parks.length; i++) {
                                     parks[i].markOnMap().setVisible(true);
                                         if (parks[i].id() != selectedId) {
@@ -108,7 +110,7 @@ var ViewModel = function() {
                                     }};
 
     self.clearFilter = function () {
-                                self.selectedPark(false);
+                                self.selectedParkOpen(false);
                                 var parks = this.parks();
                                 for (i=0; i < parks.length; i++) {
                                             parks[i].markOnMap().setVisible(true);
