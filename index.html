@@ -10,20 +10,26 @@
     <section data-bind="attr: {id: name}">
         <p data-bind="text: name"></p>
         <p>
-            <span data-bind="text: temp"></span> &deg; F
+                <span data-bind="text: weather"></span>
+            <!-- <span data-bind="forEach: weather">
+                <span data-bind="text: $data"></span>
+            </span> -->
         </p>
-        <p>
-            <img data-bind="attr:{src: conditionIco}"></span>
+            &deg; F
         </p>
-        <p>
-            wind speed of - <span data-bind="text: wind"></span> MPH
-        </p>
+        <!-- <button data-bind="click: getWeather">Refresh</button> -->
     </section>
 </div>
 
-<div>
-    Filter by park name!
-  <select id="park-name-text"></select>
+<div data-bind="visible: selectedPark"> <!-- Appears when you select something -->
+    <span data-bind="text: selectedPark()"></span>.
+</div><div>
+    <p>
+        Filter by park conditions
+    <select data-bind="options: parks,
+                       optionsText: 'text',
+                       value: selectedPark,
+                       optionsCaption: 'Choose a park'"></select>
   <input id="park-name-sub" type="button" value="<- goto ">
   <input id="park-name-sub" type="button" value="reset" onclick="window.location.reload()">
 </div>
@@ -35,16 +41,9 @@
 <script src='bower_components/select2/vendor/jquery-2.1.0.js'></script>
 <script src='bower_components/knockout/dist/knockout.js'></script>
 
-<script src= "js/mods.js"></script>
-
-<script async defer
-src= "https://maps.googleapis.com/maps/api/js?key=AIzaSyAgzELOPXkam7vjIB3y-uLLld5DDjoF55c">
-</script>
-
-
-<script src= "js/mappo.js"></script>
-
-<script src="js/finish.js"></script>
+<script src="js/app.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgzELOPXkam7vjIB3y-uLLld5DDjoF55c&callback=initMap"
+async defer></script>
 
 <script src='bower_components/select2/dist/js/select2.full.js'></script>
 

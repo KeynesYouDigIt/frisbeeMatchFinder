@@ -62,9 +62,6 @@ function get_all_the_weather (parks) {
     }
 };
 
-//for now though, we'll do that right now.
-get_all_the_weather(init_parks);
-
 function build_models (raw_data) {
     // This function, also called in finish.js, builds out ko models to be
     // used on the page when markers are selected.
