@@ -142,8 +142,7 @@ function Arena(dat) {
     // Set up the weather underground api call with no parameters, decoupled from the parameters
     // coming from the data. Key should be defined in keys.js
 
-    this.hey = ko.observable('poop');
-    this.weather = ko.observable('yep');
+    this.weather = ko.observable('fetching weather... (wait or refresh the page)');
     ko.computed( function() {
             console.log('getWeather')
             var OW_call = 'http://api.openweathermap.org/data/2.5/weather' +
@@ -158,11 +157,12 @@ function Arena(dat) {
           dataFilter: function(data) {
                       var data = JSON.parse(data);
                       delete data.redirect;
-                      return JSON.stringify([data.main.temp + ' degrees F ',
-                                'Wind speed - ' + data.wind.speed + ' MPH']);
+                      var detailData = [data.main.temp + ' degrees F ',
+                                'Wind speed - ' + data.wind.speed + ' MPH'];
+                      return JSON.stringify(detailData);
                   },
-          success: this.weather
-      }).done(console.log(this.weather))
+        success: this.weather
+      })
   }, this);
   };
 
