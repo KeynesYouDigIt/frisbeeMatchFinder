@@ -10,8 +10,10 @@
         <section data-bind="attr: {id: name}">
             <p data-bind="text: name"></p>
             <p>
-                    <span data-bind="text: temp"></span> &deg; F
-        </p>
+                <span data-bind="foreach: weather">
+                    <span data-bind="text: $data"></span><br><br>
+                </span>
+            </p>
         <!-- <button data-bind="click: getWeather">Refresh</button> -->
     </section>
 </div>

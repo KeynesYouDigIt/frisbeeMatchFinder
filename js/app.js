@@ -143,8 +143,7 @@ function Arena(dat) {
     // coming from the data. Key should be defined in keys.js
 
     this.hey = ko.observable('poop');
-
-    this.temp = ko.observable('yep');
+    this.weather = ko.observable('yep');
     ko.computed( function() {
             console.log('getWeather')
             var OW_call = 'http://api.openweathermap.org/data/2.5/weather' +
@@ -159,10 +158,11 @@ function Arena(dat) {
           dataFilter: function(data) {
                       var data = JSON.parse(data);
                       delete data.redirect;
-                      return JSON.stringify([data.main.temp, data.wind]);
+                      return JSON.stringify([data.main.temp + ' degrees F ',
+                                'Wind speed - ' + data.wind.speed + ' MPH']);
                   },
-          success: this.temp
-      }).done(console.log(this.temp))
+          success: this.weather
+      }).done(console.log(this.weather))
   }, this);
   };
 
