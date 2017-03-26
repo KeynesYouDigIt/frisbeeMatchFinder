@@ -6,16 +6,11 @@
 <link rel="stylesheet" href="bower_components/select2/dist/css/select2.min.css">
 <body>
 
-<div data-bind="foreach: parks">
-    <section data-bind="attr: {id: name}">
-        <p data-bind="text: name"></p>
-        <p>
-                <span data-bind="text: weather"></span>
-            <!-- <span data-bind="forEach: weather">
-                <span data-bind="text: $data"></span>
-            </span> -->
-        </p>
-            &deg; F
+    <div data-bind="foreach: parks">
+        <section data-bind="attr: {id: name}">
+            <p data-bind="text: name"></p>
+            <p>
+                    <span data-bind="text: temp"></span> &deg; F
         </p>
         <!-- <button data-bind="click: getWeather">Refresh</button> -->
     </section>

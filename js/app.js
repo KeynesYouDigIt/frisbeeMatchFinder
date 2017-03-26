@@ -138,12 +138,13 @@ function Arena(dat) {
 
     this.name = ko.observable(dat.text);
 
-    //this.weather = ko.observable()
 
     // Set up the weather underground api call with no parameters, decoupled from the parameters
     // coming from the data. Key should be defined in keys.js
 
-    this.weather = ko.observable('yep');
+    this.hey = ko.observable('poop');
+
+    this.temp = ko.observable('yep');
     ko.computed( function() {
             console.log('getWeather')
             var OW_call = 'http://api.openweathermap.org/data/2.5/weather' +
@@ -155,15 +156,15 @@ function Arena(dat) {
           url: OW_call,
           method: 'GET',
           crossDomain: true,
-          success: this.hey // i think makes it like this.weather(data)
-      }).then(function () {console.log('anden')})
+          dataFilter: function(data) {
+                      var data = JSON.parse(data);
+                      delete data.redirect;
+                      return JSON.stringify([data.main.temp, data.wind]);
+                  },
+          success: this.temp
+      }).done(console.log(this.temp))
   }, this);
-  console.log(this.weather)
   };
 
 vem = new ViewModel()
 ko.applyBindings(vem)
-
-setTimeout(function () {
-    console.log(vem.parks()[0].weather()['main'])
-}, 3000);
