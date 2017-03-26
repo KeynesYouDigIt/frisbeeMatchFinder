@@ -20,12 +20,6 @@ function initMap() {
      var filter = null
      // grab the raw parks data as an array
      var places = init_parks;
-     //get_all_the_weather(places);
-     /// Set to a var here so init_parks can be changed in the
-     /// other script and remain decoupled.
-     /// if init_parks changes to a different array of data
-     /// like something pulled from an ORM, just change this var.
-
      // Log that init map has been called
      // and generate map, bounds, InfoWindow.
      console.log('its the map man')
@@ -53,11 +47,15 @@ function initMap() {
                  title:places[i].text,
                  icon: 'https://cdn4.iconfinder.com/data/icons/simply-8-bits-11/96/spaceinvader_1.png'
              });
+             init_parks[i].markOnMap = mark;
              markers.push(mark);
              bounds.extend(mark.position);
              mark.addListener('click', function() {
                  populateInfo(this, largeInfoWindow);
              })}};
+
+    console.log('init_parks')
+    console.log(init_parks)
 
      // the markers array is set up as needed,
      // expand the map acordingly.
@@ -82,44 +80,40 @@ function initMap() {
 
          //add a listner for when the infowindow is closed.
          infowindow.addListener('closeclick', function() {
-             console.log('closeclick')
+             infowindow.marker.setAnimation(null)
+             infowindow.close()
          });
      };
-         // instantiate the ViewModel and activate KO near the bottom of the initMap function
-
+     vem = new ViewModel()
+     ko.applyBindings(vem)
 };
 
-
-// log when the build is occurring
 console.log('building ko models');
-ko.options.deferUpdates = true
 var ViewModel = function() {
-    //ko.options.deferUpdates = true
     var self = this;
     // the ViewModel will end up with an array of ko models with the
     // needed observables.
     this.parks = ko.observableArray([]);
 
-    this.addPark = function (park){
-        self.parks.push(thePark)
-    }
+    self.selectedPark = ko.observable(false);
 
-    this.selectedPark = ko.observable()
+    self.filterParks = function() {
+                                var selectedId = this.selectedPark().id();
+                                var parks = this.parks()
+                                for (i=0; i < parks.length; i++) {
+                                    parks[i].markOnMap().setVisible(true);
+                                        if (parks[i].id() != selectedId) {
+                                            parks[i].markOnMap().setVisible(false);
+                                        }
+                                    }};
 
-    // this.pushpark = function (thePark) {
-    //     console.log('pushpark')
-    //     self.parks.push(thePark)
-    // };
-    var vm = self
-
-    function getWeatherAll() {
-        init_parks.forEach(function(park_raw){
-        // build the ko model and push to the parks array.
-        thePark = new Arena(park_raw);
-        thePark.getWeather(vm)
-        //self.parks.push(thePark)
-        })
-    };
+    self.clearFilter = function () {
+                                self.selectedPark(false);
+                                var parks = this.parks();
+                                for (i=0; i < parks.length; i++) {
+                                            parks[i].markOnMap().setVisible(true);
+                                        }
+                                    };
 
     init_parks.forEach(function(park_raw){
         // build the ko arena model and push to the parks array.
@@ -127,31 +121,22 @@ var ViewModel = function() {
         self.parks.push(thePark)
         //console.log(thePark.weather())
     });
-    //ko.computed(getWeatherAll(console.log('the then')))
 };
 
 function Arena(dat) {
     this.id = ko.observable(dat.id);
-    // observables are easiest to work with when isolated to singe values,
-    // so data that is stored in a nested obect is seperated out here and
-    // in line 102
     this.lat = ko.observable(dat.position.lat);
     this.lng = ko.observable(dat.position.lng);
+    this.markOnMap = ko.observable(dat.markOnMap);
 
     this.name = ko.observable(dat.text);
 
-
-    // Set up the weather underground api call with no parameters, decoupled from the parameters
-    // coming from the data. Key should be defined in keys.js
-
     this.weather = ko.observable('fetching weather... (wait or refresh the page)');
     ko.computed( function() {
-            console.log('getWeather')
             var OW_call = 'http://api.openweathermap.org/data/2.5/weather' +
             '?lat=' + this.lat().toString() +
             '&lon=' + this.lng().toString() +
             '&units=imperial&appid=' + config.ow_key
-            console.log(OW_call);
         $.ajax({
           url: OW_call,
           method: 'GET',
@@ -167,6 +152,3 @@ function Arena(dat) {
       })
   }, this);
   };
-
-vem = new ViewModel()
-ko.applyBindings(vem)

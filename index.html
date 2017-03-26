@@ -18,18 +18,24 @@
     </section>
 </div>
 
-<div data-bind="visible: selectedPark"> <!-- Appears when you select something -->
-    <span data-bind="text: selectedPark()"></span>.
-</div><div>
+<div data-bind="visible: selectedPark">
+    <span data-bind="foreach: selectedPark">
+        that park happens to be
+        <span data-bind="text: name"></span><br><br>
+</div>
+
+<div>
     <p>
         Filter by park conditions
     <select data-bind="options: parks,
-                       optionsText: 'name',
+                       optionsText: 'weather',
                        value: selectedPark,
-                       optionsCaption: 'Choose a park'"></select>
-  <input id="park-name-sub" type="button" value="<- goto ">
-  <input id="park-name-sub" type="button" value="reset" onclick="window.location.reload()">
+                       optionsCaption: 'Choose a park by weather',
+                       event: {click: filterParks}"></select>
+  <button data-bind="value: selectedPark, event: {click:clearFilter}"> clear filter </button>
 </div>
+
+
 
 <div id="map">
 
