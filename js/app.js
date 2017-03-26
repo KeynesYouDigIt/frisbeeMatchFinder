@@ -81,7 +81,9 @@ function initMap() {
          infowindow.open(map, marker);
 
          //add a listner for when the infowindow is closed.
-         infowindow.addListener('closeclick', function() {})
+         infowindow.addListener('closeclick', function() {
+             console.log('closeclick')
+         });
      };
          // instantiate the ViewModel and activate KO near the bottom of the initMap function
 
