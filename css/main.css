@@ -8,35 +8,51 @@
 	font-size: 19px;
 	color: black;
     /*grid border for dev*/
-	/*border:2px dotted red;*/
+	/*border:1px dotted red;*/
 	text-align: center;
+    align-content: center;
+    align-self: center;
+    margin: auto;
 }
 
 html,
 body {
     height: 100%;
-    margin: 0;
-    padding: 0;
-}
-#map {
-    padding: 5px;
-    height: 95%;
-    length: 80%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
-#park-name-text{
-    margin: 10px;
+
+@media screen and (max-width: 715px) {
+    * {
+        font-size: 14px;
+
+    }
+    p {
+        max-width: 65%;
+    }
+}
+
+#map {
+    width: 99%;
+    max-width: 99%;
+    height: 75%;
+    max-height: 75%;
 }
 
 .park-info-open {
-    transform: translate(6px,0px);
+    transform: translate(1px,0px);
     text-align: left;
-    height: 250px;
-    width: 350px;
+    height: 150px;
+    width: 250px;
     padding: 5px;
     position: relative;
-    margin: 5px;
-    transition: 1.7s;
+    transition: 1.3s;
+}
+
+select {
+    max-width: 95%;
 }
 
 nav,
@@ -44,7 +60,7 @@ section {
 	width: 250px;
 	height: 100%;
 	position: absolute;
-	transform: translate(-260px,0px);
-	transition: transform 0.6s;
+	transform: translate(-460px,0px);
+	transition: transform 0.4s;
     border: 6px black;
 }

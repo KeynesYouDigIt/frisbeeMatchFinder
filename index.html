@@ -1,11 +1,16 @@
 <head>
     <meta charset="utf-8">
-    <title>frisbeeTndr</title>
-</head>
-<link rel="stylesheet" href='css/main.css'>
-<link rel="stylesheet" href="bower_components/select2/dist/css/select2.min.css">
-<body>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <title>frisbeeTndr</title>
+
+    <link rel="stylesheet" href='css/main.css'>
+
+</head>
+
+<body>
     <div data-bind="foreach: parks">
         <section data-bind="attr: {id: name}">
             <p data-bind="text: name"></p>
@@ -14,32 +19,32 @@
                     <span data-bind="text: $data"></span><br><br>
                 </span>
             </p>
-        <!-- <button data-bind="click: getWeather">Refresh</button> -->
-    </section>
-</div>
+            <p>
+            <button data-bind="event: {click: $parent.closeMe}">Close me</button>
+            </p>
+        </section>
+    </div>
+    <div>
+        <br>
+        <select data-bind="options: parks,
+                               optionsText: 'name',
+                               value: selectedPark,
+                               optionsCaption: 'Choose a park by name',
+                               event: {click: filterParks}"></select>
+        <br>or<br>
+        <select data-bind="options: parks,
+                           optionsText: 'weather',
+                           value: selectedPark,
+                           optionsCaption: 'Choose a park by weather',
+                           event: {click: filterParks}"></select>
+        <br><br>
+      <button data-bind="value: selectedPark, event: {click:clearFilter}"> Show all again    </button>
+    </div>
 
-<div data-bind="visible: selectedParkOpen">
-    <span data-bind="foreach: selectedPark">
-        that park happens to be
-        <span data-bind="text: name"></span><br><br>
-</div>
+        <div id="map">
 
-<div>
-    <p>
-        Filter by park conditions
-    <select data-bind="options: parks,
-                       optionsText: 'weather',
-                       value: selectedPark,
-                       optionsCaption: 'Choose a park by weather',
-                       event: {click: filterParks}"></select>
-  <button data-bind="value: selectedPark, event: {click:clearFilter}"> clear filter </button>
-</div>
-
-
-
-<div id="map">
-
-</div>
+        </div>
+</body>
 <script src="js/keys.js"></script>
 <script src='bower_components/select2/vendor/jquery-2.1.0.js'></script>
 <script src='bower_components/knockout/dist/knockout.js'></script>

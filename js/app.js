@@ -24,9 +24,10 @@ function initMap() {
      // and generate map, bounds, InfoWindow.
      console.log('its the map man')
      var map = new google.maps.Map(document.getElementById('map'), {
-         zoom: 5,
+         zoom: 10,
          center: {lat: 40.7413, lng: -74.998}
      });
+
      var largeInfoWindow = new google.maps.InfoWindow();
      var bounds = new google.maps.LatLngBounds();
 
@@ -34,7 +35,6 @@ function initMap() {
      var markers = []
 
      for (i = 0; i < places.length; i++) {
-         if (filter==null || places[i].id == filter) {
              // First check if there is a filter, if there isnt
              // make sure everything is displayed.
              // If there is, check the filter for which Park the
@@ -45,14 +45,16 @@ function initMap() {
                  position: places[i].position,
                  map: map,
                  title:places[i].text,
-                 icon: 'https://cdn4.iconfinder.com/data/icons/simply-8-bits-11/96/spaceinvader_1.png'
+                 park_id: places[i].id,
+                 icon: 'http://www.space-invaders.com/static/img/buttons/favicon.ico'
              });
              init_parks[i].markOnMap = mark;
+             mark.window = largeInfoWindow;
              markers.push(mark);
              bounds.extend(mark.position);
              mark.addListener('click', function() {
                  populateInfo(this, largeInfoWindow);
-             })}};
+             })};
 
     console.log('init_parks')
     console.log(init_parks)
@@ -61,34 +63,53 @@ function initMap() {
      // expand the map acordingly.
      map.fitBounds(bounds);
 
-     function populateInfo(marker, infowindow) {
-         // this function adds the info needed to the info window
-         // and makes the markers react accordingly.
-
-         // first, get the ko observable element of the clicked park by
-         // looking for the park title in the id.
-         var clickedParkTitle = document.getElementById(marker.title);
-         // then set class to open to bring the info forward
-         clickedParkTitle.classList.toggle('park-info-open');
-
-         // make sure info window marker is the marker clicked and animate
-         // the marker
-         infowindow.marker = marker;
-         infowindow.marker.setAnimation(google.maps.Animation.BOUNCE);
-         infowindow.setContent('<div>' + marker.title + '</div>');
-         infowindow.open(map, marker);
-
-         //add a listner for when the infowindow is closed.
-         infowindow.addListener('closeclick', function() {
-             infowindow.marker.setAnimation(null)
-             infowindow.close()
-         });
-     };
      vem = new ViewModel()
      ko.applyBindings(vem)
+     console.log('building ko models');
 };
 
-console.log('building ko models');
+
+function populateInfo(marker, infowindow) {
+    // this function adds the info needed to the info window
+    // and makes the markers react accordingly.
+
+
+    // handle park info
+    google_mark_already_open = document.getElementsByClassName('park-info-open')[0]
+    console.log(google_mark_already_open)
+    if (google_mark_already_open != null) {
+        infowindow.marker.setAnimation(null)
+        google_mark_already_open.classList.remove('park-info-open')
+        vem.activeInfoWindow.close()
+    };
+
+    var clickedParkTitle = document.getElementById(marker.title);
+    // then set class to open to bring the info forward
+    clickedParkTitle.classList.toggle('park-info-open');
+
+
+    // make sure info window marker is the marker clicked and animate
+    // the marker
+    infowindow.marker = marker;
+
+    //attach info window to view model to interact properly with KO models
+    vem.activeInfoWindow = infowindow;
+    console.log('infowindowline98')
+    console.log(infowindow.marker)
+    infowindow.marker.setAnimation(google.maps.Animation.BOUNCE);
+    infowindow.setContent('<div>' + marker.title + '</div>');
+    infowindow.open(map, marker);
+
+    //add a listner for when the infowindow is closed.
+    infowindow.addListener('closeclick', function() {
+        marker.setAnimation(null)
+        // then set class to open to bring the info forward
+        clickedParkTitle.classList.remove('park-info-open');
+        infowindow.close()
+    });
+};
+
+
 var ViewModel = function() {
     var self = this;
     // the ViewModel will end up with an array of ko models with the
@@ -96,33 +117,51 @@ var ViewModel = function() {
     this.parks = ko.observableArray([]);
 
     self.selectedPark = ko.observable();
-    self.selectedParkOpen = ko.observable(false);
+
+    var largeInfoWindow = new google.maps.InfoWindow();
+
+    self.closeMe = function (park) {
+                                    var clickedParkTitle = document.getElementById(park.name());
+                                    // then set class to open to bring the info forward
+                                    clickedParkTitle.classList.remove('park-info-open');
+                                    park.markOnMap().setAnimation(null);
+                                    // check both the info window with the marker data and
+                                    // OR an infowindow that may have been populated with an earlier
+                                    // selection and close
+                                    vem.activeInfoWindow.close()
+                                    //largeInfoWindow.close();
+                                };
 
     self.filterParks = function() {
-                                var selectedId = this.selectedPark().id();
-                                var parks = this.parks();
-                                self.selectedParkOpen(true);
-                                for (i=0; i < parks.length; i++) {
-                                    parks[i].markOnMap().setVisible(true);
-                                        if (parks[i].id() != selectedId) {
-                                            parks[i].markOnMap().setVisible(false);
-                                        }
-                                    }};
+                                    console.log(this.selectedPark())
+                                    var selectedId = this.selectedPark().id();
+                                    var parks = this.parks();
+                                    populateInfo(this.selectedPark().markOnMap(), largeInfoWindow)
 
-    self.clearFilter = function () {
-                                self.selectedParkOpen(false);
-                                var parks = this.parks();
-                                for (i=0; i < parks.length; i++) {
-                                            parks[i].markOnMap().setVisible(true);
+                                    for (i=0; i < parks.length; i++) {
+                                        parks[i].markOnMap().setVisible(true);
+                                            if (parks[i].id() != selectedId) {
+                                                parks[i].markOnMap().setVisible(false);
+                                            }
                                         }
                                     };
 
-    init_parks.forEach(function(park_raw){
-        // build the ko arena model and push to the parks array.
-        thePark = new Arena(park_raw);
-        self.parks.push(thePark)
-        //console.log(thePark.weather())
-    });
+    self.clearFilter = function () {
+                                    self.closeMe(this.selectedPark())
+                                    console.log(this.selectedPark())
+                                    var parks = this.parks();
+                                    for (i=0; i < parks.length; i++) {
+                                                parks[i].markOnMap().setVisible(true);
+                                            }
+                                    };
+
+    init_parks.forEach( function(park_raw) {
+                                            // build the ko arena model and push to the parks array.
+                                            var thePark = new Arena(park_raw);
+                                            self.parks.push(thePark)
+                                            //console.log(thePark.markOnMap());
+                                            //console.log(thePark.weather())
+                                        });
 };
 
 function Arena(dat) {
@@ -133,7 +172,11 @@ function Arena(dat) {
 
     this.name = ko.observable(dat.text);
 
-    this.weather = ko.observable('fetching weather... (wait or refresh the page)');
+    this.weather = ko.observable(['fetching weather...   '+
+                                    'if this takes long '+
+                                    'at all there may have '+
+                                    'been an error, sorry! '+
+                                    'please refesh the page or try again later.']);
     ko.computed( function() {
             var OW_call = 'http://api.openweathermap.org/data/2.5/weather' +
             '?lat=' + this.lat().toString() +
@@ -151,6 +194,9 @@ function Arena(dat) {
                       return JSON.stringify(detailData);
                   },
         success: this.weather
-      })
+    }).error( function (err) {
+        console.log('NOOOO')
+        console.log(err)
+    })
   }, this);
-  };
+};
