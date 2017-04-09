@@ -15,10 +15,15 @@
         <section data-bind="attr: {id: name}">
             <p data-bind="text: name"></p>
             <p>
+            <div data-bind="if: weather().length > 1">
                 <span data-bind="foreach: weather">
-                    <span data-bind="text: $data"></span><br><br>
+                     <span data-bind="text: $data"></span><br><br>
                 </span>
-            </p>
+            </div>
+            <div data-bind="if: weather().length < 2">
+                <span data-bind="text: error"></span>
+            </div>
+        </p>
             <p>
             <button data-bind="event: {click: $parent.closeMe}">Close me</button>
             </p>

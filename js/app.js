@@ -75,6 +75,7 @@ function populateInfo(marker, infowindow) {
 
 
     // handle park info
+    ///!! illegal dom
     google_mark_already_open = document.getElementsByClassName('park-info-open')[0]
     console.log(google_mark_already_open)
     if (google_mark_already_open != null) {
@@ -83,6 +84,7 @@ function populateInfo(marker, infowindow) {
         vem.activeInfoWindow.close()
     };
 
+    ///!! llegal dom
     var clickedParkTitle = document.getElementById(marker.title);
     // then set class to open to bring the info forward
     clickedParkTitle.classList.toggle('park-info-open');
@@ -155,6 +157,7 @@ var ViewModel = function() {
                                             }
                                     };
 
+
     init_parks.forEach( function(park_raw) {
                                             // build the ko arena model and push to the parks array.
                                             var thePark = new Arena(park_raw);
@@ -172,11 +175,10 @@ function Arena(dat) {
 
     this.name = ko.observable(dat.text);
 
-    this.weather = ko.observable(['fetching weather...   '+
-                                    'if this takes long '+
-                                    'at all there may have '+
-                                    'been an error, sorry! '+
-                                    'please refesh the page or try again later.']);
+    this.weather = ko.observable(['fetching weather...']);
+
+    this.error = 'An error has been encountered getting weather data, please refresh the page or try again later.'
+
     ko.computed( function() {
             var OW_call = 'http://api.openweathermap.org/data/2.5/weather' +
             '?lat=' + this.lat().toString() +
@@ -194,8 +196,8 @@ function Arena(dat) {
                       return JSON.stringify(detailData);
                   },
         success: this.weather
-    }).error( function (err) {
-        console.log('NOOOO')
+    }).fail( function (err) {
+        console.log('Full error for developers')
         console.log(err)
     })
   }, this);
